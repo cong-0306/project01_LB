@@ -1,0 +1,14 @@
+# roles/haproxy_pgsql/defaults/main.yml
+
+pgsql_listen_port: 5432
+
+pgsql_backends:
+  - name: dba
+    ip: 10.1.5.10
+    port: 5432
+  - name: dbs
+    ip: 10.1.5.20
+    port: 5432
+  - name: dbb
+    ip: 10.1.5.30
+    port: 5432

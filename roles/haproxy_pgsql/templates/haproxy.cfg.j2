@@ -1,0 +1,30 @@
+# roles/haproxy_pgsql/templates/haproxy.cfg.j2
+
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    daemon
+
+defaults
+    log     global
+    mode    tcp
+    option  tcplog
+    timeout connect 5s
+    timeout client  1m
+    timeout server  1m
+
+frontend postgresql
+    bind *:{{ pgsql_listen_port }}
+    mode tcp
+    option tcplog
+    default_backend postgresql_backend
+
+backend postgresql_backend
+    mode tcp
+    option tcplog
+    option tcp-check
+    balance roundrobin
+    default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256 weight 100
+{% for db in pgsql_backends %}
+    server {{ db.name }} {{ db.ip }}:{{ db.port }} check
+{% endfor %}
