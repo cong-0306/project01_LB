@@ -1,0 +1,48 @@
+---
+# =========================
+# pgBackRest Client Install (PGDG 기반)
+# =========================
+
+- name: Enable PGDG common repo
+  become: true
+  ansible.builtin.command: dnf config-manager --enable pgdg-common
+  changed_when: false
+
+- name: Enable PGDG tools repo
+  become: true
+  ansible.builtin.command: dnf config-manager --enable pgdg-tools
+  changed_when: false
+
+- name: Clean dnf cache
+  become: true
+  ansible.builtin.command: dnf clean all
+  changed_when: false
+
+- name: Rebuild dnf cache
+  become: true
+  ansible.builtin.command: dnf makecache
+  changed_when: false
+
+- name: Install pgBackRest from PGDG
+  become: true
+  ansible.builtin.dnf:
+    name: pgbackrest
+    state: present
+
+- name: Create pgBackRest config directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/pgbackrest
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: "0750"
+
+- name: Deploy pgBackRest client configuration
+  become: true
+  ansible.builtin.template:
+    src: pgbackrest.conf.j2
+    dest: /etc/pgbackrest/pgbackrest.conf
+    owner: postgres
+    group: postgres
+    mode: "0640"

@@ -1,0 +1,6 @@
+# playbooks/pgsql-oauth.yml
+
+- hosts: pgsql_leader
+  become: true
+  roles:
+    - postgres_oauth

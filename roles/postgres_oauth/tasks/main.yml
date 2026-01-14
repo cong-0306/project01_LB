@@ -1,0 +1,67 @@
+---
+# roles/postgres_oauth/tasks/main.yml
+
+- name: Ensure oauth_user exists (no password change)
+  become: true
+  become_user: postgres
+  postgresql_user:
+    name: "{{ oauth_db_user }}"
+    state: present
+  tags: oauth
+
+- name: Ensure oauth_db exists
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name: "{{ oauth_db_name }}"
+    owner: postgres
+    state: present
+  tags: oauth
+
+- name: Grant database privileges to oauth_user
+  become: true
+  become_user: postgres
+  postgresql_privs:
+    database: "{{ oauth_db_name }}"
+    roles: "{{ oauth_db_user }}"
+    type: database
+    privs: "{{ oauth_db_privileges | join(',') }}"
+    state: present
+  tags: oauth
+
+- name: Grant schema usage on public schema
+  become: true
+  become_user: postgres
+  postgresql_privs:
+    database: "{{ oauth_db_name }}"
+    roles: "{{ oauth_db_user }}"
+    type: schema
+    objs: "{{ oauth_schema }}"
+    privs: USAGE
+    state: present
+  tags: oauth
+
+- name: Grant table privileges on existing OAuth tables
+  postgresql_privs:
+    db: oauth_db
+    role: oauth_user
+    objs: "{{ item }}"
+    type: table
+    privs: SELECT,INSERT,UPDATE,DELETE
+    schema: public
+  loop:
+    - oauth_users
+    - oauth_tokens
+
+
+- name: Grant sequence usage (for oauth_tokens_token_id_seq)
+  postgresql_privs:
+    db: oauth_db
+    role: oauth_user
+    objs: "{{ item }}"
+    type: sequence
+    privs: USAGE,SELECT
+    schema: public
+  loop:
+    - oauth_tokens_token_id_seq
+

@@ -1,0 +1,10 @@
+---
+# ansible/roles/pgbackrest_client/defaults/main.yml
+# pgbackrest client defaults
+
+stanza_name: pgcluster
+pg_data_dir: /var/lib/pgsql/15/data
+
+pgbackrest_repo_host: 10.1.5.50
+pgbackrest_repo_host_user: postgres
+pgbackrest_repo_path: /backup/pgbackrest
