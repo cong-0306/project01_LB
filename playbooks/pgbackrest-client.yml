@@ -1,7 +1,7 @@
 ---
 # ansible/playbooks/pgbackrest-client.yml
 
-- name: Setup pgBackRest client
+- name: Install pgBackRest client on DB servers
   hosts: pgsql_db
   become: true
   roles:

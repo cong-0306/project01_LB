@@ -1,10 +1,6 @@
 ---
-# ansible/roles/pgbackrest_client/defaults/main.yml
-# pgbackrest client defaults
+# roles/pgbackrest_client/defaults/main.yml
 
-stanza_name: pgcluster
-pg_data_dir: /var/lib/pgsql/15/data
+pgbackrest_package: pgbackrest
 
-pgbackrest_repo_host: 10.1.5.50
-pgbackrest_repo_host_user: postgres
-pgbackrest_repo_path: /backup/pgbackrest
+pgdg_repo_rpm: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
