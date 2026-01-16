@@ -1,0 +1,7 @@
+---
+# playbooks/pgsql-ai.yml
+
+- hosts: pgsql_leader
+  become: true
+  roles:
+    - postgres_ai
